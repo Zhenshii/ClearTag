@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#184232" />
+    <title>Clear Tag - Natural Fiber Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              forest: {
+                50: '#f2fcf5',
+                100: '#e1f8e8',
+                200: '#c3ecd2',
+                300: '#94dab3',
+                400: '#5bbc8e',
+                500: '#359f70',
+                600: '#267f58',
+                700: '#216548',
+                800: '#1d513b',
+                900: '#184232',
+              },
+              earth: {
+                50: '#fbf7f4',
+                100: '#f5efe9',
+                200: '#ebe0d6',
+                300: '#ddc8b5',
+                400: '#cba88d',
+                500: '#bc8a68',
+                600: '#ae7254',
+                700: '#905a45',
+                800: '#774a3b',
+                900: '#603d32',
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', 'system-ui', 'sans-serif'],
+              serif: ['Merriweather', 'Georgia', 'serif'],
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.5s ease-out',
+              'slide-up': 'slideUp 0.5s ease-out',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              slideUp: {
+                '0%': { transform: 'translateY(20px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #fbf7f4; /* earth-50 */
+        overscroll-behavior-y: none; /* Prevent pull-to-refresh on mobile */
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Merriweather', serif;
+      }
+      /* Hide scrollbar for clean mobile look */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.2/",
+    "react": "https://aistudiocdn.com/react@^19.2.2",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.2/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.33.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

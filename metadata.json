@@ -1,0 +1,7 @@
+{
+  "name": "ClearTag",
+  "description": "A conscious shopping companion for discovering natural fiber clothing brands, checking product fabric scores, and learning about sustainable materials.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
