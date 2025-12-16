@@ -62,12 +62,13 @@
     <style>
       body {
         font-family: 'Inter', sans-serif;
-        background-color: #fbf7f4;
-        overscroll-behavior-y: none;
+        background-color: #fbf7f4; /* earth-50 */
+        overscroll-behavior-y: none; /* Prevent pull-to-refresh on mobile */
       }
       h1, h2, h3, h4, h5, h6 {
         font-family: 'Merriweather', serif;
       }
+      /* Hide scrollbar for clean mobile look */
       .no-scrollbar::-webkit-scrollbar {
         display: none;
       }
@@ -76,19 +77,18 @@
         scrollbar-width: none;
       }
     </style>
-    <script type="importmap">
-    {
-      "imports": {
-        "react/": "https://aistudiocdn.com/react@^19.2.2/",
-        "react": "https://aistudiocdn.com/react@^19.2.2",
-        "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.2/",
-        "@google/genai": "https://aistudiocdn.com/@google/genai@^1.33.0"
-      }
-    }
-    </script>
-  </head>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.2/",
+    "react": "https://aistudiocdn.com/react@^19.2.2",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.2/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.33.0"
+  }
+}
+</script>
+</head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
