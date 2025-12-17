@@ -1,18 +1,23 @@
 import { GoogleGenAI } from "@google/genai";
 import { GradeResult } from "../types";
 
-// NOTE: In a real production app, you might want to proxy this request through a backend
-// to keep the API key hidden. For this frontend-only demo, we assume the key is in env.
-const apiKey = process.env.API_KEY || ''; 
-
-const ai = new GoogleGenAI({ apiKey });
-
+/**
+ * Analyzes a product using Gemini AI.
+ * This service uses the @google/genai SDK which is optimized for this environment.
+ * Note: Initializing the GoogleGenAI instance inside the function is a best practice 
+ * for mobile devices to avoid stale connection errors during network switches.
+ */
 export async function checkProduct(input: string, imageBase64?: string): Promise<GradeResult> {
-  if (!apiKey) {
-    throw new Error("API Key is missing.");
+  // Ensure we use the API key directly from the environment as required.
+  if (!process.env.API_KEY) {
+    throw new Error("Missing API Key. Please check your environment configuration.");
   }
 
-  const modelId = 'gemini-2.5-flash';
+  // Create a new instance for each call to ensure fresh headers and state.
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  
+  // Use gemini-3-flash-preview for the best performance on mobile devices.
+  const modelId = 'gemini-3-flash-preview';
 
   const systemInstruction = `
     You are ClearTag AI, an expert in sustainable fashion, textile science, and fabric composition. 
@@ -45,7 +50,7 @@ export async function checkProduct(input: string, imageBase64?: string): Promise
       "score": 85,
       "grade": "B",
       "compositionAnalysis": "e.g. 100% Organic Cotton (detected from label)",
-      "careInstructions": "Short, specific washing and drying instructions based on the fabric type (e.g., 'Machine wash cold, tumble dry low.').",
+      "careInstructions": "Short, specific washing and drying instructions based on the fabric type.",
       "explanation": "A short 1-2 sentence explanation of why it got this grade."
     }
   `;
@@ -71,6 +76,7 @@ export async function checkProduct(input: string, imageBase64?: string): Promise
       });
     }
 
+    // Call the model using the recommended generateContent pattern.
     const response = await ai.models.generateContent({
       model: modelId,
       contents: { parts },
@@ -81,15 +87,16 @@ export async function checkProduct(input: string, imageBase64?: string): Promise
     });
 
     const text = response.text || '';
+    
+    // Extract search results for transparency and grounding.
     const sources = response.candidates?.[0]?.groundingMetadata?.groundingChunks?.flatMap(chunk => 
       chunk.web?.uri ? [{ title: chunk.web.title || 'Source', uri: chunk.web.uri }] : []
     ) || [];
 
-    // Attempt to extract JSON from the text response
+    // Extract JSON from the potentially conversational model output.
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
-      const jsonStr = jsonMatch[0];
-      const parsed = JSON.parse(jsonStr);
+      const parsed = JSON.parse(jsonMatch[0]);
       return {
         ...parsed,
         sources
@@ -98,14 +105,21 @@ export async function checkProduct(input: string, imageBase64?: string): Promise
         return {
             score: 0,
             grade: 'F',
-            compositionAnalysis: "Could not determine composition",
-            explanation: "The AI could not extract structured data. Please try again with a clearer photo or text description.",
+            compositionAnalysis: "Parsing Error",
+            explanation: "The AI response was not in a recognizable format. Please try again with a clearer description.",
             sources
         }
     }
 
-  } catch (error) {
-    console.error("Gemini Error:", error);
-    throw new Error("Failed to analyze product. Please try again.");
+  } catch (error: any) {
+    console.error("Gemini Service Error:", error);
+    
+    // Check for network-level failures common in mobile environments.
+    const msg = error.message || String(error);
+    if (msg.toLowerCase().includes('fetch') || msg.toLowerCase().includes('network')) {
+       throw new Error("Mobile network connection interrupted. Please try using text search or a smaller image size.");
+    }
+    
+    throw new Error("Failed to analyze product. The service may be busy, please try again.");
   }
 }
