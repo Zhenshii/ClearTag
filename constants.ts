@@ -155,7 +155,31 @@ export const BRANDS: Brand[] = [
     location: 'India',
     shipping: 'Worldwide',
     websiteUrl: 'https://reistor.com/collections/fabric-organic-cotton',
-    imageUrl: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=800&auto=format&fit=crop'
+    imageUrl: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=800&auto=format&fit=crop'
+  },
+  {
+    id: '14',
+    name: 'Sonora',
+    description: 'European brand specializing in premium hemp and organic cotton for durable, eco-friendly essentials.',
+    priceRange: '$$',
+    categories: ['Unisex', 'Basics', 'Hemp'],
+    primaryFabrics: ['Hemp', 'Organic Cotton'],
+    location: 'Spain',
+    shipping: 'Worldwide',
+    websiteUrl: 'https://thesonorabrand.com/collections/all',
+    imageUrl: 'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?q=80&w=800&auto=format&fit=crop'
+  },
+  {
+    id: '15',
+    name: 'Brown Living',
+    description: 'India\'s first plastic-free marketplace curated for sustainable, ethically made natural clothing and lifestyle products.',
+    priceRange: '$$',
+    categories: ['Women', 'Men', 'Accessories'],
+    primaryFabrics: ['Organic Cotton', 'Linen', 'Kala Cotton'],
+    location: 'India',
+    shipping: 'Worldwide',
+    websiteUrl: 'https://brownliving.in/collections/fashion',
+    imageUrl: 'https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=800&auto=format&fit=crop'
   }
 ];
 

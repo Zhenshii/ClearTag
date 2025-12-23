@@ -3,20 +3,13 @@ import { GradeResult } from "../types";
 
 /**
  * Analyzes a product using Gemini AI.
- * This service uses the @google/genai SDK which is optimized for this environment.
- * Note: Initializing the GoogleGenAI instance inside the function is a best practice 
- * for mobile devices to avoid stale connection errors during network switches.
+ * This service uses the @google/genai SDK as required by the environment.
  */
 export async function checkProduct(input: string, imageBase64?: string): Promise<GradeResult> {
-  // Ensure we use the API key directly from the environment as required.
-  if (!process.env.API_KEY) {
-    throw new Error("Missing API Key. Please check your environment configuration.");
-  }
-
-  // Create a new instance for each call to ensure fresh headers and state.
+  // Always use this exact initialization pattern as per platform requirements.
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
-  // Use gemini-3-flash-preview for the best performance on mobile devices.
+  // Use gemini-3-flash-preview for high-performance and cost-effective mobile analysis.
   const modelId = 'gemini-3-flash-preview';
 
   const systemInstruction = `
@@ -88,7 +81,7 @@ export async function checkProduct(input: string, imageBase64?: string): Promise
 
     const text = response.text || '';
     
-    // Extract search results for transparency and grounding.
+    // Extract grounding sources for transparency.
     const sources = response.candidates?.[0]?.groundingMetadata?.groundingChunks?.flatMap(chunk => 
       chunk.web?.uri ? [{ title: chunk.web.title || 'Source', uri: chunk.web.uri }] : []
     ) || [];
@@ -105,8 +98,8 @@ export async function checkProduct(input: string, imageBase64?: string): Promise
         return {
             score: 0,
             grade: 'F',
-            compositionAnalysis: "Parsing Error",
-            explanation: "The AI response was not in a recognizable format. Please try again with a clearer description.",
+            compositionAnalysis: "Could not analyze",
+            explanation: "The AI analysis did not return clear results. Try providing a clearer label photo or the direct product link.",
             sources
         }
     }
@@ -114,12 +107,12 @@ export async function checkProduct(input: string, imageBase64?: string): Promise
   } catch (error: any) {
     console.error("Gemini Service Error:", error);
     
-    // Check for network-level failures common in mobile environments.
+    // Map common mobile fetch/network errors to friendly messages.
     const msg = error.message || String(error);
     if (msg.toLowerCase().includes('fetch') || msg.toLowerCase().includes('network')) {
-       throw new Error("Mobile network connection interrupted. Please try using text search or a smaller image size.");
+       throw new Error("Network error. Please check your internet connection and try again.");
     }
     
-    throw new Error("Failed to analyze product. The service may be busy, please try again.");
+    throw new Error("Unable to analyze product at this time. Please try again later.");
   }
 }
