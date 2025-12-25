@@ -339,6 +339,39 @@ export const MATERIALS: Material[] = [
     careInstructions: ['Machine wash cool', 'Tumble dry low', 'Iron on low heat'],
     ecoImpact: 'Excellent. Bamboo grows fast without pesticides; mechanical processing is clean.'
   },
+  {
+    id: 'm34',
+    name: 'Cactus Silk (Sabra)',
+    category: MaterialCategory.Natural,
+    sustainabilityRating: 'B',
+    description: 'Vegan silk-like textile derived from Saharan aloe vera cactus or agave fibers. **Note:** Often substituted with rayon; always verify fiber source.',
+    pros: ['Vegan alternative', 'High sheen', 'Durable', 'Cultural heritage'],
+    cons: ['Low transparency in supply chain', 'Naming varies significantly', 'Hard to identify pure fiber'],
+    careInstructions: ['Professional clean recommended', 'Hand wash cold with extreme care', 'Avoid wringing'],
+    ecoImpact: 'Good. Traditionally extracted raw materials require minimal processing.'
+  },
+  {
+    id: 'm35',
+    name: 'Mycelium Leather',
+    category: MaterialCategory.Natural,
+    sustainabilityRating: 'A',
+    description: 'Grown from the root structure (mycelium) of fungi. A non-animal, non-plastic leather alternative.',
+    pros: ['Fully biodegradable', 'Zero-waste growth', 'Low water/land footprint'],
+    cons: ['New technology', 'Very expensive', 'Limited availability'],
+    careInstructions: ['Wipe with damp cloth', 'Do not submerge in water', 'Spot clean only'],
+    ecoImpact: 'Superior. A closed-loop material that avoids both animal and fossil fuel inputs.'
+  },
+  {
+    id: 'm36',
+    name: 'Piñatex',
+    category: MaterialCategory.Natural,
+    sustainabilityRating: 'B',
+    description: 'Non-woven leather alternative made from pineapple leaf fibers, a byproduct of existing agriculture.',
+    pros: ['Utilizes agricultural waste', 'No extra land/water needed', 'Vegan'],
+    cons: ['Often finished with a synthetic top coat', 'Not fully biodegradable if coated', 'Textured appearance'],
+    careInstructions: ['Wipe with damp cloth', 'Use a natural colorless wax to maintain moisture', 'Air dry'],
+    ecoImpact: 'Good. Supports circular economy and farming communities.'
+  },
 
   // --- SEMI-SYNTHETIC ---
   {
@@ -406,6 +439,50 @@ export const MATERIALS: Material[] = [
     cons: ['Chemical intensive production', 'Expensive to produce'],
     careInstructions: ['Machine wash gentle cold', 'Do not tumble dry', 'Iron on low heat'],
     ecoImpact: 'Moderate. Uses waste product (cotton linter), but chemical recovery varies by manufacturer.'
+  },
+  {
+    id: 'm37',
+    name: 'Cactus Leather',
+    category: MaterialCategory.SemiSynthetic,
+    sustainabilityRating: 'B',
+    description: 'Nopal cactus vegan leather (Desserto-style). A plant-based coated textile used for bags and shoes.',
+    pros: ['Low water consumption', 'Carbon sequestration during growth', 'Vegan'],
+    cons: ['Typically blended with PU for durability', 'Not fully biodegradable', 'Processing chemicals'],
+    careInstructions: ['Wipe with damp cloth', 'Store in a cool, dry place', 'Avoid heavy friction'],
+    ecoImpact: 'Good. Significantly lower environmental footprint than animal leather.'
+  },
+  {
+    id: 'm38',
+    name: 'Apple Leather',
+    category: MaterialCategory.SemiSynthetic,
+    sustainabilityRating: 'B',
+    description: 'Material using waste pomace (peels and cores) from the apple juice industry, blended with polymers.',
+    pros: ['Upcycles industrial waste', 'Reduces petroleum reliance', 'Durable'],
+    cons: ['High polymer (PU) content', 'Limited recyclability'],
+    careInstructions: ['Wipe clean with a damp cloth', 'Do not machine wash', 'Air dry'],
+    ecoImpact: 'Good. Diverts fruit waste from landfills into functional fashion.'
+  },
+  {
+    id: 'm39',
+    name: 'Grape Leather',
+    category: MaterialCategory.SemiSynthetic,
+    sustainabilityRating: 'B',
+    description: 'Leather-like material (Vegea-style) made from wine industry waste including skins and seeds.',
+    pros: ['Bio-based waste upcycling', 'Leather-like aesthetic', 'Vegan'],
+    cons: ['Contains synthetic binders', 'Emerging durability data'],
+    careInstructions: ['Wipe clean only', 'Keep away from direct heat', 'Air dry'],
+    ecoImpact: 'Good. Innovative use of viticulture waste.'
+  },
+  {
+    id: 'm40',
+    name: 'Orange Fiber',
+    category: MaterialCategory.SemiSynthetic,
+    sustainabilityRating: 'B',
+    description: 'Silk-like cellulose textile extracted from citrus waste (leftover peels after juicing).',
+    pros: ['Circular agriculture waste use', 'Incredibly soft and lightweight', 'Biodegradable'],
+    cons: ['Chemically intensive extraction', 'High cost'],
+    careInstructions: ['Hand wash or gentle cycle cold', 'Dry clean safe', 'Iron on low heat'],
+    ecoImpact: 'Good. Promotes zero-waste fashion from the food industry.'
   },
 
   // --- SYNTHETIC ---
@@ -529,6 +606,17 @@ export const MATERIALS: Material[] = [
     cons: ['Major microplastic polluter', 'Traps odors', 'Static prone'],
     careInstructions: ['Machine wash cold', 'Do not use fabric softener (clogs fibers)', 'Hang dry'],
     ecoImpact: 'Very Poor. One of the biggest contributors to oceanic microplastic pollution.'
+  },
+  {
+    id: 'm41',
+    name: 'ECONYL® (Regenerated Nylon)',
+    category: MaterialCategory.Synthetic,
+    sustainabilityRating: 'B',
+    description: 'Recycled nylon created from nylon waste such as fishing nets, fabric scraps, and industrial plastic.',
+    pros: ['Infinite recyclability', 'Cleans oceans of ghost nets', 'Lower carbon footprint than virgin nylon'],
+    cons: ['Still sheds microplastics', 'Synthetic based', 'Requires high-heat processing'],
+    careInstructions: ['Machine wash cold with a microplastic filter bag', 'Line dry', 'Avoid high heat'],
+    ecoImpact: 'Good. A circular solution for high-performance synthetic materials.'
   },
   {
     id: 'm32',

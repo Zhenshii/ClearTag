@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { checkProduct } from '../services/geminiService';
-import { GradeResult } from '../types';
+import { GradeResult, FitCheckConfig } from '../types';
 
 export const ProductChecker: React.FC = () => {
   const [input, setInput] = useState('');
@@ -9,6 +9,15 @@ export const ProductChecker: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showCamera, setShowCamera] = useState(false);
   const [isFlashOn, setIsFlashOn] = useState(false);
+  
+  // Fit Check State
+  const [includeFitCheck, setIncludeFitCheck] = useState(false);
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
+  const [desiredSize, setDesiredSize] = useState('');
+  const [waist, setWaist] = useState('');
+  const [bustChest, setBustChest] = useState('');
+  const [inseam, setInseam] = useState('');
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -60,21 +69,14 @@ export const ProductChecker: React.FC = () => {
       } catch (err) {
         console.error("Flash error:", err);
       }
-    } else {
-      console.log("Torch not supported on this device");
     }
   };
 
   const handleCapture = () => {
     if (videoRef.current && canvasRef.current) {
-      // Haptic feedback
-      if ('vibrate' in navigator) {
-        navigator.vibrate(50);
-      }
-
+      if ('vibrate' in navigator) navigator.vibrate(50);
       const video = videoRef.current;
       const canvas = canvasRef.current;
-      
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       const context = canvas.getContext('2d');
@@ -92,7 +94,16 @@ export const ProductChecker: React.FC = () => {
     setError(null);
     setResult(null);
     try {
-      const data = await checkProduct(input, base64);
+      const fitConfig: FitCheckConfig | undefined = includeFitCheck ? {
+        includeFitCheck: true,
+        height,
+        weight,
+        desiredSize,
+        waist,
+        bustChest,
+        inseam
+      } : undefined;
+      const data = await checkProduct(input, base64, fitConfig);
       setResult(data);
     } catch (err: any) {
       setError(err.message || 'Analysis failed.');
@@ -110,7 +121,16 @@ export const ProductChecker: React.FC = () => {
     setResult(null);
 
     try {
-      const data = await checkProduct(input);
+      const fitConfig: FitCheckConfig | undefined = includeFitCheck ? {
+        includeFitCheck: true,
+        height,
+        weight,
+        desiredSize,
+        waist,
+        bustChest,
+        inseam
+      } : undefined;
+      const data = await checkProduct(input, undefined, fitConfig);
       setResult(data);
     } catch (err: any) {
       setError(err.message || 'Something went wrong.');
@@ -165,45 +185,26 @@ export const ProductChecker: React.FC = () => {
              <button 
                onClick={toggleFlash}
                className="w-12 h-12 flex items-center justify-center bg-black/30 backdrop-blur-md rounded-full text-white pointer-events-auto active:scale-90 transition-transform"
-               title="Toggle Flash"
              >
                <svg className={`w-6 h-6 ${isFlashOn ? 'text-yellow-400' : 'text-white'}`} fill="currentColor" viewBox="0 0 24 24">
                  <path d="M13 2L3 14h7v8l10-12h-7z" />
                </svg>
              </button>
-
-             <button 
-               onClick={() => setShowCamera(false)}
-               className="w-12 h-12 flex items-center justify-center bg-black/30 backdrop-blur-md rounded-full text-white pointer-events-auto active:scale-90 transition-transform"
-               title="Close Camera"
-             >
-               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
-               </svg>
+             <button onClick={() => setShowCamera(false)} className="w-12 h-12 flex items-center justify-center bg-black/30 backdrop-blur-md rounded-full text-white pointer-events-auto active:scale-90 transition-transform">
+               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
              </button>
           </div>
         </div>
         
         <div className="h-40 bg-black flex flex-col items-center justify-center pb-safe px-8 relative">
-           <button 
-             onClick={handleCapture}
-             className="relative w-20 h-20 flex items-center justify-center group"
-           >
+           <button onClick={handleCapture} className="relative w-20 h-20 flex items-center justify-center group">
               <div className="absolute inset-0 rounded-full border-4 border-white/30 group-active:scale-95 transition-transform"></div>
               <div className="w-16 h-16 bg-white rounded-full shadow-lg group-active:scale-90 transition-transform"></div>
            </button>
            <span className="mt-4 text-[10px] text-gray-500 font-bold uppercase tracking-widest">Capture to Scan</span>
         </div>
-        
         <canvas ref={canvasRef} className="hidden" />
-
-        <style>{`
-          @keyframes scan {
-            0% { top: 0%; }
-            50% { top: 100%; }
-            100% { top: 0%; }
-          }
-        `}</style>
+        <style>{`@keyframes scan { 0% { top: 0%; } 50% { top: 100%; } 100% { top: 0%; } }`}</style>
       </div>
     );
   }
@@ -240,21 +241,105 @@ export const ProductChecker: React.FC = () => {
             </div>
          </div>
 
-         <form onSubmit={handleTextSubmit} className="flex gap-2">
-            <input 
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="e.g. Uniqlo Linen Shirt"
-              className="flex-1 p-4 rounded-xl border border-earth-300 bg-white shadow-inner focus:ring-2 focus:ring-forest-500 focus:outline-none placeholder:text-earth-400"
-            />
-            <button 
-              type="submit"
-              disabled={isLoading || !input.trim()}
-              className="px-6 bg-earth-200 text-forest-900 rounded-xl font-bold hover:bg-earth-300 disabled:opacity-50 transition-colors"
-            >
-              Analyze
-            </button>
+         <form onSubmit={handleTextSubmit} className="space-y-4">
+            <div className="flex gap-2">
+              <input 
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Product name or URL..."
+                className="flex-1 p-4 rounded-xl border border-earth-300 bg-white shadow-inner focus:ring-2 focus:ring-forest-500 focus:outline-none placeholder:text-earth-400"
+              />
+              <button 
+                type="submit"
+                disabled={isLoading || !input.trim()}
+                className="px-6 bg-forest-800 text-white rounded-xl font-bold hover:bg-forest-900 disabled:opacity-50 transition-colors"
+              >
+                Analyze
+              </button>
+            </div>
+
+            {/* Fit Check Toggle and Fields */}
+            <div className="bg-white p-5 rounded-xl border border-earth-200 shadow-sm space-y-4">
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <input 
+                  type="checkbox"
+                  checked={includeFitCheck}
+                  onChange={(e) => setIncludeFitCheck(e.target.checked)}
+                  className="w-5 h-5 rounded border-earth-300 text-forest-600 focus:ring-forest-500"
+                />
+                <span className="text-sm font-bold text-earth-700 group-hover:text-forest-800 transition-colors">Also analyze fit</span>
+              </label>
+
+              {includeFitCheck && (
+                <div className="space-y-4 animate-fade-in border-t border-earth-100 pt-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="col-span-2">
+                      <label className="block text-[10px] font-bold text-earth-400 uppercase mb-1">Desired Size*</label>
+                      <input 
+                        type="text" 
+                        required
+                        value={desiredSize}
+                        onChange={(e) => setDesiredSize(e.target.value)}
+                        placeholder="e.g. M, 32, 8..." 
+                        className="w-full p-2.5 bg-earth-50 border border-earth-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-forest-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-earth-400 uppercase mb-1">Height</label>
+                      <input 
+                        type="text" 
+                        value={height}
+                        onChange={(e) => setHeight(e.target.value)}
+                        placeholder="5'10\" 
+                        className="w-full p-2.5 bg-earth-50 border border-earth-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-forest-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-earth-400 uppercase mb-1">Weight</label>
+                      <input 
+                        type="text" 
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
+                        placeholder="e.g. 160lbs" 
+                        className="w-full p-2.5 bg-earth-50 border border-earth-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-forest-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-earth-400 uppercase mb-1">Waist</label>
+                      <input 
+                        type="text" 
+                        value={waist}
+                        onChange={(e) => setWaist(e.target.value)}
+                        placeholder="e.g. 32\" 
+                        className="w-full p-2.5 bg-earth-50 border border-earth-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-forest-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-earth-400 uppercase mb-1">Bust/Chest</label>
+                      <input 
+                        type="text" 
+                        value={bustChest}
+                        onChange={(e) => setBustChest(e.target.value)}
+                        placeholder="e.g. 40\" 
+                        className="w-full p-2.5 bg-earth-50 border border-earth-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-forest-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-earth-400 uppercase mb-1">Inseam</label>
+                      <input 
+                        type="text" 
+                        value={inseam}
+                        onChange={(e) => setInseam(e.target.value)}
+                        placeholder="e.g. 30\" 
+                        className="w-full p-2.5 bg-earth-50 border border-earth-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-forest-500"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-earth-400 italic font-medium">* Only Size is required. Enter others if known.</p>
+                </div>
+              )}
+            </div>
          </form>
        </div>
 
@@ -300,6 +385,16 @@ export const ProductChecker: React.FC = () => {
                </div>
 
                <div className="grid grid-cols-1 gap-4">
+                  {result.fitVerdict && (
+                    <div className="bg-amber-50/50 p-4 rounded-xl border border-amber-100">
+                      <h4 className="font-bold text-amber-900 text-[10px] uppercase tracking-widest mb-2 flex items-center">
+                        <svg className="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758L5 19m0-14l4.121 4.121"></path></svg>
+                        Fit Verdict
+                      </h4>
+                      <p className="text-amber-900 text-sm font-semibold">{result.fitVerdict}</p>
+                    </div>
+                  )}
+
                   <div className="bg-earth-50/50 p-4 rounded-xl border border-earth-100">
                      <h4 className="font-bold text-forest-900 text-[10px] uppercase tracking-widest mb-2 opacity-60">Composition Analysis</h4>
                      <p className="text-earth-800 text-sm font-medium">{result.compositionAnalysis}</p>

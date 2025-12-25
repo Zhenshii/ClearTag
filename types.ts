@@ -29,6 +29,16 @@ export interface Brand {
   imageUrl: string;
 }
 
+export interface FitCheckConfig {
+  includeFitCheck: boolean;
+  height?: string;
+  weight?: string;
+  desiredSize: string;
+  waist?: string;
+  bustChest?: string;
+  inseam?: string;
+}
+
 export interface GradeResult {
   productName?: string;
   score: number; // 0-100
@@ -36,6 +46,7 @@ export interface GradeResult {
   compositionAnalysis: string;
   careInstructions?: string;
   explanation: string;
+  fitVerdict?: string;
   sources?: Array<{ title: string; uri: string }>;
 }
 
