@@ -37,6 +37,7 @@ export interface FitCheckConfig {
   waist?: string;
   bustChest?: string;
   inseam?: string;
+  hips?: string;
 }
 
 export interface GradeResult {

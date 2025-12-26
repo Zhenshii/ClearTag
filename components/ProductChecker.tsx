@@ -18,6 +18,7 @@ export const ProductChecker: React.FC = () => {
   const [waist, setWaist] = useState('');
   const [bustChest, setBustChest] = useState('');
   const [inseam, setInseam] = useState('');
+  const [hips, setHips] = useState('');
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -101,7 +102,8 @@ export const ProductChecker: React.FC = () => {
         desiredSize,
         waist,
         bustChest,
-        inseam
+        inseam,
+        hips
       } : undefined;
       const data = await checkProduct(input, base64, fitConfig);
       setResult(data);
@@ -128,7 +130,8 @@ export const ProductChecker: React.FC = () => {
         desiredSize,
         waist,
         bustChest,
-        inseam
+        inseam,
+        hips
       } : undefined;
       const data = await checkProduct(input, undefined, fitConfig);
       setResult(data);
@@ -268,7 +271,7 @@ export const ProductChecker: React.FC = () => {
                   onChange={(e) => setIncludeFitCheck(e.target.checked)}
                   className="w-5 h-5 rounded border-earth-300 text-forest-600 focus:ring-forest-500"
                 />
-                <span className="text-sm font-bold text-earth-700 group-hover:text-forest-800 transition-colors">Also analyze fit</span>
+                <span className="text-sm font-bold text-earth-700 group-hover:text-forest-800 transition-colors">Fit Check</span>
               </label>
 
               {includeFitCheck && (
@@ -322,6 +325,16 @@ export const ProductChecker: React.FC = () => {
                         value={bustChest}
                         onChange={(e) => setBustChest(e.target.value)}
                         placeholder="e.g. 40\" 
+                        className="w-full p-2.5 bg-earth-50 border border-earth-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-forest-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-earth-400 uppercase mb-1">Hips</label>
+                      <input 
+                        type="text" 
+                        value={hips}
+                        onChange={(e) => setHips(e.target.value)}
+                        placeholder="e.g. 38\" 
                         className="w-full p-2.5 bg-earth-50 border border-earth-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-forest-500"
                       />
                     </div>

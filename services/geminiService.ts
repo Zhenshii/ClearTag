@@ -41,6 +41,7 @@ export async function checkProduct(
       fitCheck.weight ? `Weight: ${fitCheck.weight}` : null,
       fitCheck.waist ? `Waist: ${fitCheck.waist}` : null,
       fitCheck.bustChest ? `Bust/Chest: ${fitCheck.bustChest}` : null,
+      fitCheck.hips ? `Hips: ${fitCheck.hips}` : null,
       fitCheck.inseam ? `Inseam: ${fitCheck.inseam}` : null,
       `Target Size: ${fitCheck.desiredSize}`
     ].filter(Boolean).join(', ');
@@ -50,7 +51,7 @@ export async function checkProduct(
       User Stats: ${stats}.
       Use Google Search to find customer reviews, sizing charts, or "true to fit" data for this specific product. 
       Analyze if the requested size (${fitCheck.desiredSize}) will fit based on the provided measurements. 
-      Note if it runs small, large, long, or tight in specific areas mentioned (like chest or waist).
+      Note if it runs small, large, long, or tight in specific areas mentioned (like chest, waist, or hips).
       Provide a concise and helpful 'fitVerdict'.
     `;
   }
@@ -67,7 +68,7 @@ export async function checkProduct(
 
     let userPrompt = input;
     if (fitCheck?.includeFitCheck) {
-      userPrompt += ` | Fit Check stats: Desired Size ${fitCheck.desiredSize}, Height ${fitCheck.height || 'N/A'}, Weight ${fitCheck.weight || 'N/A'}, Waist ${fitCheck.waist || 'N/A'}, Bust/Chest ${fitCheck.bustChest || 'N/A'}, Inseam ${fitCheck.inseam || 'N/A'}.`;
+      userPrompt += ` | Fit Check stats: Desired Size ${fitCheck.desiredSize}, Height ${fitCheck.height || 'N/A'}, Weight ${fitCheck.weight || 'N/A'}, Waist ${fitCheck.waist || 'N/A'}, Bust/Chest ${fitCheck.bustChest || 'N/A'}, Hips ${fitCheck.hips || 'N/A'}, Inseam ${fitCheck.inseam || 'N/A'}.`;
     }
 
     parts.push({ text: `Product Context: "${userPrompt}"` });
