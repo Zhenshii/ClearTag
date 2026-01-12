@@ -28,11 +28,21 @@ export async function checkProduct(
       "productName": "Product Name",
       "score": 85,
       "grade": "B",
-      "compositionAnalysis": "Fabric details",
+      "composition": [
+        { "material": "Organic Cotton", "percentage": 100, "color": "green" }
+      ],
+      "environmentalImpact": {
+        "positives": ["Carbon neutral growth", "Biodegradable"],
+        "negatives": ["High water usage during dyeing"]
+      },
       "careInstructions": "Short wash/dry guide",
-      "explanation": "Why this grade?",
       "fitVerdict": "OPTIONAL: If fit check requested, summarize sizing based on reviews vs user stats."
     }
+
+    COLOR RULES for composition:
+    - green: Natural sustainable fibers (Organic cotton, hemp, linen).
+    - yellow: Mixed or semi-synthetic (Tencel, recycled polyester, conventional wool).
+    - red: Synthetic or high impact (Virgin polyester, nylon, acrylic, conventional cotton).
   `;
 
   if (fitCheck?.includeFitCheck) {
@@ -92,13 +102,7 @@ export async function checkProduct(
       const parsed = JSON.parse(jsonMatch[0]);
       return { ...parsed, sources } as GradeResult;
     } else {
-      return {
-        score: 0,
-        grade: 'F',
-        compositionAnalysis: "Analysis failed",
-        explanation: "Could not parse JSON response from AI.",
-        sources
-      };
+      throw new Error("Could not parse AI response.");
     }
   } catch (error: any) {
     console.error("Gemini Service Error:", error);

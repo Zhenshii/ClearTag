@@ -1,7 +1,22 @@
+
 export enum MaterialCategory {
   Natural = "Natural",
   SemiSynthetic = "Semi-Synthetic",
   Synthetic = "Synthetic"
+}
+
+// Added missing Brand interface
+export interface Brand {
+  id: string;
+  name: string;
+  description: string;
+  priceRange: string;
+  categories: string[];
+  primaryFabrics: string[];
+  location: string;
+  shipping: string;
+  websiteUrl: string;
+  imageUrl: string;
 }
 
 export interface Material {
@@ -14,19 +29,6 @@ export interface Material {
   cons: string[];
   careInstructions: string[];
   ecoImpact: string;
-}
-
-export interface Brand {
-  id: string;
-  name: string;
-  description: string;
-  priceRange: '$' | '$$' | '$$$' | '$$$$';
-  categories: string[]; // e.g., "Men", "Women", "Basics"
-  primaryFabrics: string[];
-  location: string;
-  shipping: string;
-  websiteUrl: string;
-  imageUrl: string;
 }
 
 export interface FitCheckConfig {
@@ -44,11 +46,15 @@ export interface GradeResult {
   productName?: string;
   score: number; // 0-100
   grade: 'A' | 'B' | 'C' | 'D' | 'F';
-  compositionAnalysis: string;
+  composition: Array<{ material: string; percentage: number; color: 'green' | 'yellow' | 'red' }>;
+  environmentalImpact: {
+    positives: string[];
+    negatives: string[];
+  };
   careInstructions?: string;
-  explanation: string;
   fitVerdict?: string;
   sources?: Array<{ title: string; uri: string }>;
+  timestamp?: number;
 }
 
-export type ViewState = 'brands' | 'dictionary' | 'checker';
+export type ViewState = 'lifecycle' | 'dictionary' | 'checker';

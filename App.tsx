@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { BrandDirectory } from './components/BrandDirectory';
+import { LifecyclePage } from './components/LifecyclePage';
 import { FabricDictionary } from './components/FabricDictionary';
 import { ProductChecker } from './components/ProductChecker';
 import { ViewState } from './types';
 
 function App() {
-  const [view, setView] = useState<ViewState>('brands');
+  const [view, setView] = useState<ViewState>('lifecycle');
 
   return (
     <div className="flex flex-col h-[100dvh] w-full overflow-hidden bg-earth-50 text-stone-800 font-sans select-none relative">
@@ -17,24 +17,22 @@ function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 no-scrollbar scroll-smooth w-full">
-        {/* Added sufficient padding bottom to prevent content being hidden behind the fixed footer */}
         <div className="max-w-xl mx-auto w-full min-h-full pb-32"> 
-          {view === 'brands' && <BrandDirectory />}
+          {view === 'lifecycle' && <LifecyclePage />}
           {view === 'dictionary' && <FabricDictionary />}
           {view === 'checker' && <ProductChecker />}
         </div>
       </main>
 
       {/* Bottom Navigation */}
-      {/* Changed to fixed positioning to ensure visibility on all mobile browsers */}
       <nav className="fixed bottom-0 left-0 w-full bg-white border-t border-earth-200 flex justify-around items-start pt-3 z-40 pb-[max(env(safe-area-inset-bottom),16px)] shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.1)]">
          <NavButton 
-           active={view === 'brands'} 
-           onClick={() => setView('brands')}
+           active={view === 'lifecycle'} 
+           onClick={() => setView('lifecycle')}
            icon={
-             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
            }
-           label="Brands"
+           label="Lifecycle"
          />
          <NavButton 
            active={view === 'checker'} 
