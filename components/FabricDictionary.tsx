@@ -18,7 +18,7 @@ export const FabricDictionary: React.FC = () => {
          <h2 className="text-2xl font-serif text-forest-900 mb-6">Fabric Dictionary</h2>
          
          <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
-            <div className="flex gap-2 p-1 bg-earth-50 rounded-lg overflow-x-auto max-w-full">
+            <div className="flex gap-2 p-1 bg-earth-50 rounded-lg overflow-x-auto max-w-full no-scrollbar">
               {['All', MaterialCategory.Natural, MaterialCategory.SemiSynthetic, MaterialCategory.Synthetic].map(cat => (
                 <button
                   key={cat}
@@ -66,81 +66,99 @@ const MaterialRow: React.FC<{ material: Material }> = ({ material }) => {
 
   const getRatingColor = (rating: string) => {
     switch(rating) {
-      case 'A': return 'bg-green-100 text-green-800 border-green-200';
-      case 'B': return 'bg-lime-100 text-lime-800 border-lime-200';
-      case 'C': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'D': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'F': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'A': return 'text-green-600 border-green-200 bg-green-50';
+      case 'B': return 'text-lime-600 border-lime-200 bg-lime-50';
+      case 'C': return 'text-yellow-600 border-yellow-200 bg-yellow-50';
+      case 'D': return 'text-orange-600 border-orange-200 bg-orange-50';
+      case 'F': return 'text-red-600 border-red-200 bg-red-50';
+      default: return 'text-gray-600 border-gray-200 bg-gray-50';
     }
   };
 
   return (
-    <div className="bg-white rounded-xl border border-earth-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-2xl border border-earth-200 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
       <div 
-        className="p-5 flex flex-col md:flex-row md:items-center justify-between cursor-pointer gap-4"
+        className="p-5 flex items-center justify-between cursor-pointer gap-4"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center gap-4">
-          <div className={`w-12 h-12 flex items-center justify-center rounded-full text-xl font-bold border ${getRatingColor(material.sustainabilityRating)}`}>
+          <div className={`w-14 h-14 flex-shrink-0 flex items-center justify-center rounded-xl text-2xl font-serif font-bold border-2 ${getRatingColor(material.sustainabilityRating)}`}>
             {material.sustainabilityRating}
           </div>
           <div>
-            <h3 className="text-lg font-bold text-forest-900">{material.name}</h3>
-            <span className="text-xs font-medium text-earth-500 uppercase tracking-wide">{material.category}</span>
+            <h3 className="text-lg font-bold text-forest-900 leading-tight">{material.name}</h3>
+            <span className="text-[10px] font-bold text-earth-400 uppercase tracking-widest">{material.category}</span>
           </div>
         </div>
         
-        <div className="text-earth-400">
-          <svg className={`w-6 h-6 transform transition-transform ${isExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+        <div className="text-earth-300">
+          <svg className={`w-6 h-6 transform transition-transform duration-300 ${isExpanded ? 'rotate-180 text-forest-600' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7"></path>
           </svg>
         </div>
       </div>
 
       {isExpanded && (
-        <div className="px-5 pb-5 bg-earth-50/50 border-t border-earth-100">
-          <div className="mt-4 grid md:grid-cols-2 gap-6">
-            <div>
-              <p className="text-earth-800 mb-4">{material.description}</p>
+        <div className="px-5 pb-6 bg-earth-50/30 border-t border-earth-100 animate-slide-up">
+          <div className="mt-5 space-y-6">
+            {/* Description */}
+            <p className="text-earth-800 text-sm font-medium leading-relaxed">
+              {material.description}
+            </p>
+            
+            {/* Environmental Impact Section (The Button Style) */}
+            <div className="space-y-4">
+              <h4 className="font-bold text-forest-900 text-[10px] uppercase tracking-widest opacity-60">Environmental Impact</h4>
               
-              <div className="mb-4 bg-white p-4 rounded-lg border border-earth-200">
-                <h4 className="font-semibold text-forest-800 mb-2 text-sm flex items-center">
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                  Care Guide
-                </h4>
-                <ul className="text-sm text-earth-700 space-y-1">
-                  {material.careInstructions.map((inst, i) => (
-                    <li key={i} className="flex items-start">
-                      <span className="mr-2">•</span>{inst}
-                    </li>
+              {/* Positives */}
+              <div className="space-y-2">
+                <span className="text-[10px] font-bold text-green-600 uppercase tracking-tighter ml-1">Positives</span>
+                <div className="flex flex-wrap gap-2">
+                  {material.pros.map((pro, idx) => (
+                    <div key={idx} className="bg-green-50 border border-green-100 px-3 py-2 rounded-xl text-xs font-semibold text-green-800 flex items-center gap-2 shadow-sm hover:bg-green-100 transition-colors cursor-default">
+                      <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
+                      {pro}
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
 
-              <h4 className="font-semibold text-forest-800 mb-1 text-sm">Environmental Impact</h4>
-              <p className="text-sm text-earth-700 italic">{material.ecoImpact}</p>
+              {/* Negatives */}
+              <div className="space-y-2">
+                <span className="text-[10px] font-bold text-red-600 uppercase tracking-tighter ml-1">Negatives</span>
+                <div className="flex flex-wrap gap-2">
+                  {material.cons.map((con, idx) => (
+                    <div key={idx} className="bg-red-50 border border-red-100 px-3 py-2 rounded-xl text-xs font-semibold text-red-800 flex items-center gap-2 shadow-sm hover:bg-red-100 transition-colors cursor-default">
+                      <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                      {con}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-            
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-semibold text-green-700 mb-1 text-sm flex items-center">
-                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                  Pros
-                </h4>
-                <ul className="text-sm text-earth-700 list-disc list-inside">
-                  {material.pros.map((p, i) => <li key={i}>{p}</li>)}
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold text-red-700 mb-1 text-sm flex items-center">
-                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                  Cons
-                </h4>
-                <ul className="text-sm text-earth-700 list-disc list-inside">
-                  {material.cons.map((c, i) => <li key={i}>{c}</li>)}
-                </ul>
-              </div>
+
+            {/* Care Guide (Styled like Longevity Guide) */}
+            <div className="bg-white p-5 rounded-2xl border border-earth-200 shadow-sm">
+              <h4 className="font-bold text-forest-800 text-[10px] uppercase tracking-widest mb-3 flex items-center opacity-60">
+                <svg className="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                Care Instructions
+              </h4>
+              <ul className="text-sm text-earth-700 space-y-2">
+                {material.careInstructions.map((inst, i) => (
+                  <li key={i} className="flex items-start">
+                    <span className="mr-2 text-forest-400 font-bold">•</span>
+                    <span className="font-medium">{inst}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Extra Context */}
+            <div className="pt-4 border-t border-earth-100">
+               <h4 className="font-bold text-forest-900 text-[10px] uppercase tracking-widest opacity-60 mb-2">Detailed Impact</h4>
+               <p className="text-sm text-earth-700 italic font-medium leading-relaxed">
+                 {material.ecoImpact}
+               </p>
             </div>
           </div>
         </div>
